@@ -10,3 +10,10 @@ export async function create(data) {
     data,
   });
 }
+
+// Find a task by its numeric ID
+export async function findById(id) {
+  return prisma.task.findUnique({
+    where: { id },
+  });
+}

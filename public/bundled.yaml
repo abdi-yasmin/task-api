@@ -4,62 +4,86 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:3000
+  - url: https://task-api-8bi1.onrender.com
 tags:
   - name: tasks
     description: Task-related endpoints
 paths:
   /tasks:
+    /tasks:
+      get:
+        tags:
+          - tasks
+        summary: List all tasks
+        parameters:
+          - name: completed
+            in: query
+            required: false
+            description: Filter tasks by completion status
+            schema:
+              type: boolean
+              example: true
+          - name: limit
+            in: query
+            required: false
+            description: Maximum number of tasks to return
+            schema:
+              type: integer
+              example: 10
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/Task.yaml
+          '400':
+            $ref: ../components/responses/BadRequest.yaml
+      post:
+        tags:
+          - tasks
+        summary: Create a new task
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: ../components/schemas/Task.yaml
+        responses:
+          '201':
+            description: Task created successfully
+            content:
+              application/json:
+                schema:
+                  $ref: ../components/schemas/Task.yaml
+          '400':
+            $ref: ../components/responses/BadRequest.yaml
+  /tasks/{id}:
     get:
       tags:
         - tasks
-      summary: List all tasks
+      summary: Get a task by ID
       parameters:
-        - name: completed
-          in: query
-          required: false
-          description: Filter tasks by completion status
-          schema:
-            type: boolean
-            example: true
-        - name: limit
-          in: query
-          required: false
-          description: Maximum number of tasks to return
+        - name: id
+          in: path
+          required: true
+          description: The task ID
           schema:
             type: integer
-            example: 10
+            example: 1
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Task'
-    post:
-      tags:
-        - tasks
-      summary: Create a new task
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Task'
-      responses:
-        '201':
-          description: Task created successfully
-          content:
-            application/json:
-              schema:
                 $ref: '#/components/schemas/Task'
         '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
 components:
   schemas:
     Task:
@@ -86,3 +110,16 @@ components:
           items:
             type: string
             example: Title is required
+  responses:
+    BadRequest:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationError'
