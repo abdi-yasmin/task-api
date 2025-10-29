@@ -49,3 +49,36 @@
               $ref: ../components/schemas/Task.yaml
       "400":
         $ref: ../components/responses/BadRequest.yaml
+
+/tasks/{id}:
+  get:
+    tags:
+      - tasks
+    summary: Get a single task by ID
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the task to retrieve
+        schema:
+          type: integer
+          example: 1
+    responses:
+      "200":
+        description: Task retrieved successfully
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/Task.yaml
+      "400":
+        description: Invalid input
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/ValidationError.yaml
+      "404":
+        description: Task not found
+        content:
+          application/json:
+            schema:
+              $ref: ../components/responses/NotFoundError.yaml

@@ -8,30 +8,6 @@ servers:
 tags:
   - name: tasks
     description: Task-related endpoints
+
 paths:
-  /tasks:
-    $ref: paths/tasks.yaml
-  /tasks/{id}:
-    get:
-      tags:
-        - tasks
-      summary: Get a task by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The task ID
-          schema:
-            type: integer
-            example: 1
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: components/schemas/Task.yaml
-        "400":
-          $ref: components/responses/BadRequest.yaml
-        "404":
-          $ref: components/responses/NotFoundError.yaml
+  $ref: ./paths/tasks.yaml
